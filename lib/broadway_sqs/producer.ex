@@ -224,7 +224,9 @@ defmodule BroadwaySQS.Producer do
   end
 
   defp handle_receive_messages(%{receive_timer: nil, demand: demand} = state) when demand > 0 do
+    Logger.debug("Requesting messages from SQS since demand is #{demand}")
     messages = receive_messages_from_sqs(state, demand)
+    Logger.debug("Got #{length(messages)} messages from SQS")
     new_demand = demand - length(messages)
 
     receive_timer =
